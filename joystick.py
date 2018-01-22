@@ -1,8 +1,9 @@
 import os
-from gpiozero import MCP3008
+from gpiozero import MCP3008, Button
 from time import sleep
 
 directions = []
+buttons = []
 
 #Y = MCP3008(0)
 #X = MCP3008(1)
@@ -22,11 +23,28 @@ class joyStick:
 #        print(chan.value)
         return chan.value 
 
+class pushButton:
+    def __init__(self, pin, collor):
+        self.collor = collor
+        self.pin = Button(pin)
+        buttons.append(self)
+
+    def pressButton(self):
+        button = self.pin
+        buttonState = button.is_pressed
+        return buttonState
+
 yDir = joyStick(0, 'Y')
 xDir = joyStick(1, 'X')
-for i in range(10):
-#    xDir.readDirection()
-#    yDir.readDirection()
-    print('X value ', xDir.readDirection())
-    print('Y value ', yDir.readDirection())
-    sleep(0.5)
+gButton = pushButton(2, 'green')
+while True:
+    print(gButton.pressButton())
+    if gButton.pressButton():
+        print('X value ', xDir.readDirection())
+    else :   
+        print('Y value ', yDir.readDirection())
+    sleep(0.1)
+
+
+for direction in directions:
+    del direction
