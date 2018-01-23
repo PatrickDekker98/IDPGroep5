@@ -1,6 +1,6 @@
-import socket, time, threading, os
+import socket, time, threading, os, json
 from gpiozero import Button
-from controler/joystick.py import *
+from joystick import *
 
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,9 +15,10 @@ except:
     os._exit(0)
 
 while True:
-    time.sleep(0)
-    allInput = 1 
-    rMessage = sock.recv(2)
+    time.sleep(1)
+    allInput = json.dumps(sendAllInput(directions, buttons))
+    sock.send(allInput.encode())
+    rMessage = sock.recv(6)
     print(rMessage)
     
 

@@ -61,10 +61,10 @@ def sendAllInput(directions, buttons):
 
     return sendDic
 
-while True:
-    print(sendAllInput(directions, buttons))
-    sleep(0.5)
+#while True:
+#    print(sendAllInput(directions, buttons))
+#    sleep(0.5)
 
 
-for direction in directions:
-    del direction
+#for direction in directions:
+#    del direction
