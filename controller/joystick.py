@@ -20,8 +20,18 @@ class joyStick:
 
     def readDirection(self):
         chan = self.channel
-#        print(chan.value)
-        return chan.value 
+        intChan = int(chan.value * 100)
+        if intChan == 100:
+            retVal = 10
+        elif intChan < 45 :
+            retVal = -1
+        elif intChan > 55 :
+            retVal = 1
+        else :
+            retVal = 0
+
+        return retVal
+
 
 class pushButton:
     def __init__(self, pin, collor):
@@ -37,13 +47,23 @@ class pushButton:
 yDir = joyStick(0, 'Y')
 xDir = joyStick(1, 'X')
 gButton = pushButton(2, 'green')
+
+
+def sendAllInput(directions, buttons):
+    sendDic = {}
+    for direction in directions:
+#        print(direction.direction)
+        sendDic[direction.direction] = direction.readDirection()
+    
+    for button in buttons:
+#        print(button.collor)
+        sendDic[button.collor] = button.pressButton()
+
+    return sendDic
+
 while True:
-    print(gButton.pressButton())
-    if gButton.pressButton():
-        print('X value ', xDir.readDirection())
-    else :   
-        print('Y value ', yDir.readDirection())
-    sleep(0.1)
+    print(sendAllInput(directions, buttons))
+    sleep(0.5)
 
 
 for direction in directions:
