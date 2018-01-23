@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="source"/>
+	<classpathentry kind="lib" path="library/basicplayer3.0.jar"/>
+	<classpathentry kind="lib" path="library/jaco-mp3-player-0.9.3.jar"/>
+	<classpathentry kind="lib" path="library/jl1.0.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
