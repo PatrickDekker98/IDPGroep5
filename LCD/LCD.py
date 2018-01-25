@@ -33,12 +33,12 @@ try:
         GPIOoutLST = [LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7]
 
         #Define device constants
-        LCD_WIDTH   = 16
-        LCD_CHR     = True      #RS Character
-        LCD_CMD     = False     #RS Command
+        LCD_WIDTH = 16
+        LCD_CHR = True      #RS Character
+        LCD_CMD = False     #RS Command
 
-        LCD_LINE_1  = 0x80  #Ram Locations  (First Icon on Line)    0x80-0x96
-        LCD_LINE_2  = 0xC0  #Ram Locations  (First Icon on Line)    0xC0-0xD6
+        LCD_LINE_1 = 0x80  #Ram Locations  (First Icon on Line)    0x80-0x96
+        LCD_LINE_2 = 0xC0  #Ram Locations  (First Icon on Line)    0xC0-0xD6
 
         # Timing constants
         E_PULSE = 0.0005
@@ -48,52 +48,52 @@ try:
             GPIO.setwarnings(False)
             time.sleep(0.020)
             GPIO.setmode(GPIO.BCM)   # Use BCM GPIO numbers
-            GPIO.setup(GPIOoutLST, GPIO.OUT)
+            GPIO.setup(LCD.GPIOoutLST, GPIO.OUT)
             # lcd_byte(0x33, LCD_CMD)
             # lcd_byte(0x32, LCD_CMD)
-            lcd_byte(0x06, LCD_CMD)  # 00000110 Cursor move direction
-            lcd_byte(0x0C, LCD_CMD)  # 00001100 Display On,Cursor Off, Blink Off
-            lcd_byte(0x28, LCD_CMD)  # 00101000 Data length, number of lines, font size
-            lcd_byte(0x01, LCD_CMD)  # 00000001 Clear display
-            time.sleep(E_DELAY)
+            LCD.lcd_byte(0x06, LCD.LCD_CMD)  # 00000110 Cursor move direction
+            LCD.lcd_byte(0x0C, LCD.LCD_CMD)  # 00001100 Display On,Cursor Off, Blink Off
+            LCD.lcd_byte(0x28, LCD.LCD_CMD)  # 00101000 Data length, number of lines, font size
+            LCD.lcd_byte(0x01, LCD.LCD_CMD)  # 00000001 Clear display
+            time.sleep(LCD.E_DELAY)
 
         def lcd_byte(self, bits, mode):   #bits = bytes to send   mode LCD_CHR or LCD_CMD
-            GPIO.output(LCD_RS, mode)
+            GPIO.output(LCD.LCD_RS, mode)
 
             #High bits
-            GPIO.output(LCD_D4, False)
-            GPIO.output(LCD_D5, False)
-            GPIO.output(LCD_D6, False)
-            GPIO.output(LCD_D7, False)
+            GPIO.output(LCD.LCD_D4, False)
+            GPIO.output(LCD.LCD_D5, False)
+            GPIO.output(LCD.LCD_D6, False)
+            GPIO.output(LCD.LCD_D7, False)
             if bits & 0x10 == 0x10:
-                GPIO.output(LCD_D4, True)
+                GPIO.output(LCD.LCD_D4, True)
             if bits & 0x20 == 0x20:
-                GPIO.output(LCD_D5, True)
+                GPIO.output(LCD.LCD_D5, True)
             if bits & 0x40 == 0x40:
-                GPIO.output(LCD_D6, True)
+                GPIO.output(LCD.LCD_D6, True)
             if bits & 0x80 == 0x80:
-                GPIO.output(LCD_D7, True)
+                GPIO.output(LCD.LCD_D7, True)
 
             LCD.lcdToggleEnable(self)
 
             # Low bits
-            GPIO.output(LCD_D4, False)
-            GPIO.output(LCD_D5, False)
-            GPIO.output(LCD_D6, False)
-            GPIO.output(LCD_D7, False)
+            GPIO.output(LCD.LCD_D4, False)
+            GPIO.output(LCD.LCD_D5, False)
+            GPIO.output(LCD.LCD_D6, False)
+            GPIO.output(LCD.LCD_D7, False)
             if bits & 0x01 == 0x01:
-                GPIO.output(LCD_D4, True)
+                GPIO.output(LCD.LCD_D4, True)
             if bits & 0x02 == 0x02:
-                GPIO.output(LCD_D5, True)
+                GPIO.output(LCD.LCD_D5, True)
             if bits & 0x04 == 0x04:
-                GPIO.output(LCD_D6, True)
+                GPIO.output(LCD.LCD_D6, True)
             if bits & 0x08 == 0x08:
-                GPIO.output(LCD_D7, True)
+                GPIO.output(LCD.LCD_D7, True)
 
             LCD.lcdToggleEnable(self)
 
         def cleanDisplay(self):
-            lcd_byte(0x01, LCD_CMD)  # 00000001 Clean display
+            LCD.lcd_byte(0x01, LCD.LCD_CMD)  # 00000001 Clean display
 
         def lcdToggleEnable(self):
             #Pulse the `enable` flag to process data
@@ -110,7 +110,7 @@ try:
             LCD.lcd_byte(self, line, LCD.LCD_CMD)
 
             for char in range(LCD.LCD_WIDTH):
-                LCD.lcd_byte(ord(string[i]), LCD.LCD_CHR)
+                LCD.lcd_byte(ord(string[char]), LCD.LCD_CHR)
 
 except KeyboardInterrupt:
     GPIO.cleanup()
