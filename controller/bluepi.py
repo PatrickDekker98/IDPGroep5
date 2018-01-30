@@ -1,14 +1,14 @@
 import socket
 
-hostMacAddress = '3C:A0:67:6D:F5:DE'
-hostMacAddress = '3C:A0:67:6D:F5:DE'
-port = 54321
-sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-sock.connect((hostMacAddress, port))
-
-while True:
-    text = input('vul text in: ')
-    if text == 'guit':
+serverMACAddress = '3C:A0:67:6D:F5:DE'
+#serverMACAddress = '3c:a0:67:6d:f5:de'
+port = 15
+s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+s.connect((serverMACAddress,port))
+while 1:
+    text = input()
+    if text == "quit":
         break
-    sock.send(text.encode())
-sock.close
+    s.send(bytes(text, 'UTF-8'))
+s.close()
+

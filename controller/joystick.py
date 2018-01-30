@@ -30,7 +30,7 @@ class joyStick:
         else :
             retVal = 0
 
-        return retVal
+        return retVal 
 
 
 class pushButton:
@@ -46,7 +46,7 @@ class pushButton:
 
 yDir = joyStick(0, 'Y')
 xDir = joyStick(1, 'X')
-#gButton = pushButton(2, 'green')
+gButton = pushButton(2, 'joyStick')
 
 
 def sendAllInput(directions, buttons):
