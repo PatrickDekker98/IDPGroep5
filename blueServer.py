@@ -1,7 +1,8 @@
 import socket
 
-hostMacAddress = '3C:A0:67:6D:F5:DE'
-port = 65432
+#hostMacAddress = '3C:A0:67:6D:F5:DE'
+hostMacAddress = '3d:a0:67:6d:f5:de'
+port = 15
 backlog = 1
 sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
 sock.bind((hostMacAddress, port))

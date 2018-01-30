@@ -137,17 +137,17 @@ class clientThread(Thread):
             except: 
                 self.state = {'X' : 0 ,'Y' : 0}
 
-            if self.state['Y'] == 1:
+            if self.state['Y'] == 1 and snake.y_dir != 1:
                 snake.x_dir = 0
                 snake.y_dir = -1
-            if self.state['Y'] == -1:
+            if self.state['Y'] == -1 and snake.y_dir != -1:
                 snake.x_dir = 0
                 snake.y_dir = 1
 
-            if self.state['X'] == 1:
+            if self.state['X'] == 1 and snake.x_dir != 1:
                 snake.x_dir = -1
                 snake.y_dir = 0
-            if self.state['X'] == -1:
+            if self.state['X'] == -1 and snake.x_dir != -1:
                 snake.x_dir = 1
                 snake.y_dir = 0
 
@@ -213,7 +213,7 @@ class clientThread(Thread):
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = ''
-port = 12347
+port = 12345
 
 serversocket.bind((host, port))
 
