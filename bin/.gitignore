@@ -1,4 +1,9 @@
 /.metadata/
+/.gitignore
+/.project
 /README.md
+/blueServer.py
 /console.py
 /controller/
+/development/
+/source/
