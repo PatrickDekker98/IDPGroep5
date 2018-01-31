@@ -130,7 +130,11 @@ def stop():
     cleanDisplay()
     GPIO.cleanup()
 
+initLCD()
 
+lcdString("hello there", LCD_LINE_1)
+
+time.sleep(10)
 
 
 #https://www.raspberrypi-spy.co.uk/2012/07/16x2-lcd-module-control-using-python/
