@@ -46,8 +46,11 @@ class pushButton:
 
 yDir = joyStick(0, 'Y')
 xDir = joyStick(1, 'X')
-gButton = pushButton(2, 'joyStick')
-
+jButton = pushButton(2, 'joyStick')
+gButton = pushButton(3, 'green')
+yButton = pushButton(4, 'yellow')
+bButton = pushButton(17, 'Blue')
+rButton = pushButton(27, 'Red')
 
 def sendAllInput(directions, buttons):
     sendDict = {}
