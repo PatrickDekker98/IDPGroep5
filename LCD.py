@@ -163,7 +163,7 @@ def start():
     lcdString("_______--_______", LCD_LINE_2)
     time.sleep(0.2)
     cleanDisplay()
-    score(scoreDisplay)
+    score(0)
     
 
 def gameOver(scoreDisplay):
@@ -191,7 +191,5 @@ def gameOver(scoreDisplay):
     scoreDisplay = 0
 
 def score(scoreDisplay):
-    global scoreDisplay
     lcdString("     GO! ", LCD_LINE_1)
     lcdString("Score   :" + str(scoreDisplay), LCD_LINE_2)
-    scoreDisplay += 1
