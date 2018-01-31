@@ -98,6 +98,8 @@ def show_score():
 
 
 class clientThread(Thread):
+    oldMessage = '{"joyStick": false, "Red": false, "yellow": false, "Blue": false, "Y": -1, "green": false, "X": 0}'
+
 
     def __init__(self, clientthread, ip):
         Thread.__init__(self)
@@ -130,7 +132,11 @@ class clientThread(Thread):
                 print('someting went wrong')
 
             print(message)
-            
+            if (message == '.'):
+                message == oldMessage
+            else:
+                oldMessage = message
+
             try: 
                 self.state = json.loads(message)
                 print(self.state)
@@ -145,10 +151,10 @@ class clientThread(Thread):
                 snake.y_dir = 1
 
             if self.state['X'] == 1 and snake.x_dir != 1:
-                snake.x_dir = -1
+                snake.x_dir = 1
                 snake.y_dir = 0
             if self.state['X'] == -1 and snake.x_dir != -1:
-                snake.x_dir = 1
+                snake.x_dir = -1
                 snake.y_dir = 0
 
             for event in pygame.event.get():
@@ -186,12 +192,16 @@ class clientThread(Thread):
                 food.new_location()
                 score += 1
                 snake.grow()
+                message = str(score)
+                self.ct.send(message.encode())
 
             if snake.death():
                 score = 0
                 font = pygame.font.SysFont("Copperplate Gothic Bold", 50)
                 text = font.render("Game Over!", True, snake_colour)
                 display.blit(text, (width/2-50, height/2))
+                message = "gameover"
+                self.ct.send(message.encode())
                 pygame.display.update()
                 time.sleep(3)
                 snake.reset()
@@ -206,8 +216,10 @@ class clientThread(Thread):
             if snake.history[0][1] < 0:
                 snake.history[0][1] = height
 
+            self.ct.send('.'.encode())
+
             pygame.display.update()
-            clock.tick(10)
+            clock.tick(40)
 
 
 

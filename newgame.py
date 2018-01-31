@@ -7,6 +7,7 @@ import pygame
 from pygame.locals import *
 
 #game constants
+BACKGROUNDCOLOR = [255, 255, 0]
 MAX_SHOTS      = 2      #most player bullets onscreen
 BOMB_ODDS      = 60    #chances a new bomb will drop
 SCREENRECT     = Rect(0, 0, 1024, 1024)
@@ -20,9 +21,11 @@ def load_image(file):
     file = os.path.join(main_dir, 'assets', file)
     try:
         surface = pygame.image.load(file)
+        surfaceBig = pygame.transform.scale(surface, (64, 64)) 
+        surfaceBig.set_colorkey((255, 0, 255))
     except pygame.error:
         raise SystemExit('Could not load image "%s" %s'%(file, pygame.get_error()))
-    return surface.convert()
+    return surfaceBig.convert()
 
 def load_images(*files):
     imgs = []
@@ -43,6 +46,7 @@ screen = pygame.display.set_mode(SCREENRECT.size, winstyle, bestdepth)
 #create the background, tile the bgd image
 background = pygame.Surface(SCREENRECT.size)
 screen.blit(background, (0,0))
+screen.fill(BACKGROUNDCOLOR)
 pygame.display.flip()
 
 #see if we can load more than standard BMP
@@ -57,24 +61,32 @@ if not pygame.image.get_extended():
 # object actually gets a "move" function instead of
 # update, since it is passed extra information about
 # the keyboard
-class wall(object):
+class wall(pygame.sprite.Sprite):
+    images = []
     
     def __init__(self, pos):
         walls.append(self)
-        self.rect = pygame.Rect(pos[0], pos[1], 64, 64)
+        self.image = self.images[0]
+        self.rect = self.image.get_rect(center=pos)
+#        self.rect = pygame.Rect(pos[0], pos[1], 64, 64)
 
 class player(pygame.sprite.Sprite):
 #    speed = 10
     bounce = 24
     gun_offset = -11
-    images = []
+    frontImages = []
+    sideXImages = []
+    sideYImages = []
+    backImages = []
     def __init__(self, pos, speed=5):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.speed = speed
         self.xDir = 0
         self.yDir = 0
-        self.image = self.images[0]
+        self.curentImages =  self.frontImages
+        self.image = self.frontImages[0]
         self.rect = self.image.get_rect(center=pos)
+        self.rect.size = (64, 64)
         self.reloading = 0
         self.origtop = self.rect.top
         self.facing = -1
@@ -84,36 +96,52 @@ class player(pygame.sprite.Sprite):
             if self.rect.colliderect(wall.rect):
                 if xDir < 0:
 #                    self.rect.left = wall.rect.right + 
-                    self.rect.left = wall.rect.right
+                    self.rect.left = wall.rect.right + 5
                     return
                 if xDir > 0:
-                    self.rect.right = wall.rect.left
+                    self.rect.right = wall.rect.left - 5
                     return
                 if yDir > 0:
-                    self.rect.bottom = wall.rect.top
+                    self.rect.bottom = wall.rect.top - 5
                     return
                 if yDir < 0:
-                    self.rect.top = wall.rect.bottom
+                    self.rect.top = wall.rect.bottom + 5
                     return
 
         if xDir: 
-            self.facing = xDir
+            self.facingX = xDir
             self.rect.move_ip(xDir*self.speed, 0)
             self.rect = self.rect.clamp(SCREENRECT)
             self.xDir = xDir
         if yDir:
+            self.facingY = yDir
             self.rect.move_ip(0, yDir*self.speed)
             self.rect = self.rect.clamp(SCREENRECT)
             self.yDir = yDir
+        if yDir > 0:
+            self.curentImages = self.frontImages
+        elif yDir < 0:
+            self.curentImages = self.backImages
         if xDir > 0:
-            self.image = self.images[0]
+            self.curentImages = self.sideYImages
+            self.image = self.curentImages[0]
         elif xDir < 0:
-            self.image = self.images[1]
+            self.curentImages = self.sideXImages
+            self.image = self.curentImages[0]
+        self.image = self.curentImages[0]
+
 #        self.rect.top = self.origtop - (self.rect.left//self.bounce%2)
 
     def gunpos(self):
         pos = self.facing*self.gun_offset + self.rect.centerx
         return pos, self.rect.top
+
+class shot(pygame.sprite.Sprite):
+    speed = -11
+    images = []
+    def __init__(self, pos):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        self.image = self.images
 
 
 class Score(pygame.sprite.Sprite):
@@ -124,7 +152,7 @@ class Score(pygame.sprite.Sprite):
         self.color = Color('white')
         self.lastscore = -1
         self.update()
-        self.rect = self.image.get_rect().move(10, 450)
+        self.rect = self.image.get_rect().move(10, 32)
 
     def update(self):
         if SCORE != self.lastscore:
@@ -136,14 +164,24 @@ class Score(pygame.sprite.Sprite):
 
 #Load images, assign to sprite classes
 #(do this before the classes are used, after screen setup)
-img = load_image('slimeIdle.gif')
-player.images = [img, pygame.transform.flip(img, 1, 0)]
-
+img1 = load_image('player1Front1.gif')
+img2 = load_image('player1Front2.gif')
+player.frontImages = [img1, img2]
+img3 = load_image('player1Side1.gif')
+img4 = load_image('player1Side2.gif')
+player.sideXImages = [img3, img4]
+player.sideYImages = [pygame.transform.flip(img3, 1, 0), pygame.transform.flip(img4, 1, 0)]
+img5 = load_image('player1Back1.gif')
+img6 = load_image('player1Back2.gif')
+player.backImages = [img5, img6]
+img7 = load_image('floor.gif')
+wall.images = [img7]
 # Initialize Game Groups
 all = pygame.sprite.RenderUpdates()
 
 #assign default groups to each sprite class
 player.containers = all
+wall.containers = all
 Score.containers = all
 
 #Create Some Starting Values
@@ -188,6 +226,7 @@ for row in level:
     x = 0
 
 while player1.alive():
+    screen.fill(BACKGROUNDCOLOR)
 
 
     #get input
@@ -240,10 +279,11 @@ while player1.alive():
     pygame.display.update(dirty)
 
     #cap the framerate
-    clock.tick(40)
+    clock.tick(60)
 
-    for wall in walls:
+#    for wall in walls:
         pygame.draw.rect(screen, (255, 255, 255), wall.rect)
+
 
     pygame.display.flip()
 
