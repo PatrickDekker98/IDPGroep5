@@ -23,7 +23,7 @@
 import RPi.GPIO as GPIO
 import time
 
-scoreDisplay = None
+scoreDisplay = 0
 status = None
 counter = 0
 counter1 = 1
@@ -129,43 +129,69 @@ def lcdString(string, line):
 
 def stop():
     cleanDisplay()
-    lcdString("      Bye!", LCD_LINE_1)
+    lcdString("    Goodbye!", LCD_LINE_1)
     time.sleep(1)
     cleanDisplay()
     GPIO.cleanup()
 
 def start():
     lcdString("-    GALAXY    -", LCD_LINE_1)
+    lcdString("________________", LCD_LINE_2)
     time.sleep(0.2)
     lcdString(" -   GALAXY   - ", LCD_LINE_1)
+    lcdString("-______________-", LCD_LINE_2)
     time.sleep(0.2)
     lcdString("  -  GALAXY  -  ", LCD_LINE_1)
+    lcdString("_-____________-_", LCD_LINE_2)
     time.sleep(0.2)
     lcdString("   - GALAXY -   ", LCD_LINE_1)
+    lcdString("__-__________-__", LCD_LINE_2)
     time.sleep(0.2)
     lcdString("    -GALAXY-    ", LCD_LINE_1)
+    lcdString("___-________-___", LCD_LINE_2)
     time.sleep(0.2)
     lcdString("     GALAXY     ", LCD_LINE_1)
+    lcdString("____-______-____", LCD_LINE_2)
+    time.sleep(0.2)
+    lcdString("    -GALAXY-    ", LCD_LINE_1)
+    lcdString("_____-____-_____", LCD_LINE_2)
+    time.sleep(0.2)
+    lcdString("   _-GALAXY-_   ", LCD_LINE_1)
+    lcdString("______-__-______", LCD_LINE_2)
+    time.sleep(0.2)
+    lcdString("   _ GALAXY _   ", LCD_LINE_1)
+    lcdString("_______--_______", LCD_LINE_2)
     time.sleep(0.2)
     cleanDisplay()
-    scoreDisplay = 0
-
-def gameOver(scoreDisplay):
-    cleanDisplay():
-    lcdString("    GAME OVER   ", LCD_LINE_1)
-    lcdstring(" Score  :"+str(scoreDisplay), LCD_LINE_2)
-
-def score(scoreDisplay):
-    cleanDisplay():
-    lcdString("     GO! ", LCD_LINE_1)
-    lcdString("Score   :" + str(scoreDisplay), LCD_LINE_2)
-    gameOver(scoreDisplay)
-
-
+    score(scoreDisplay)
     
 
+def gameOver(scoreDisplay):
+    global scoreDisplay
+    cleanDisplay():
+    lcdString("    G", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GA", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAM", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAME", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAME ", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAME O", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAME OV", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAME OVE", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdString("    GAME OVER", LCD_LINE_1)
+    time.sleep(0.15)
+    lcdstring(" Score  :"+str(scoreDisplay), LCD_LINE_2)
+    scoreDisplay = 0
 
-
-initLCD()
-start()
-score(scoreDisplay)
+def score(scoreDisplay):
+    global scoreDisplay
+    lcdString("     GO! ", LCD_LINE_1)
+    lcdString("Score   :" + str(scoreDisplay), LCD_LINE_2)
+    scoreDisplay += 1
